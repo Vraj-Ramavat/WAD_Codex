@@ -181,9 +181,11 @@ export function buildFeaturedRepoFromRawData(
     const commitType = classifyCommitMessage(c.commit.message);
     const authorName = c.author?.login || c.commit.author.name || 'contributor';
 
-    const affectedCount = Math.min(allFileIds.length, (idx % 3) + 1);
-    const startIdx = (idx * 3) % Math.max(allFileIds.length, 1);
-    const affectedFileIds = allFileIds.slice(startIdx, startIdx + affectedCount);
+    // Match actual GitHub commit changed paths, not a synthetic/random file list.
+    // Older commits without fetched details remain empty rather than showing false impacts.
+    const affectedFileIds = Array.from(new Set(
+      (c.changedPaths || []).map((path) => pathToIdMap.get(path)).filter((id): id is string => Boolean(id))
+    ));
 
     return {
       id: `commit-${idx + 1}`,

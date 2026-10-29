@@ -14,6 +14,7 @@ export interface RawGitHubCommit {
     message: string;
   };
   author?: { login: string; avatar_url: string };
+  changedPaths?: string[];
 }
 
 export interface RawGitHubContributor {
@@ -89,6 +90,27 @@ export async function fetchGitHubRepoDetails(owner: string, repo: string) {
     }
   } catch (err) {
     console.warn('Could not fetch commits:', err);
+  }
+
+  // Fetch changed file paths for recent commits. Do not invent file associations.
+  // GitHub unauthenticated requests have limited quota; only inspect the newest 12.
+  const detailed = commitsData.slice(0, 12);
+  for (let offset = 0; offset < detailed.length; offset += 3) {
+    await Promise.all(detailed.slice(offset, offset + 3).map(async (commit) => {
+      try {
+        const detailRes = await fetch(
+          `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits/${commit.sha}`,
+          { headers }
+        );
+        if (!detailRes.ok) return;
+        const detail = await detailRes.json() as any;
+        commit.changedPaths = Array.isArray(detail.files)
+          ? detail.files.flatMap((file: any) => [file.filename, file.previous_filename].filter(Boolean))
+          : [];
+      } catch (error) {
+        console.warn('Unable to retrieve changed files for commit:', commit.sha, error);
+      }
+    }));
   }
 
   // 4. Fetch contributors
