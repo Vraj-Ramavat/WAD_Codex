@@ -1,0 +1,2 @@
+import React from 'react';
+export class CameraError extends React.Component{constructor(p){super(p);this.state={failed:false}}static getDerivedStateFromError(){return {failed:true}}render(){return this.state.failed?<div className="canvas-fallback"><span>3D RENDERING UNAVAILABLE</span><p>Enable WebGL hardware acceleration in your browser to view the cosmos.</p><button onClick={()=>location.reload()}>Retry</button></div>:this.props.children}}

@@ -1,0 +1,12 @@
+{
+  "name":"codegalaxy-nova-monorepo","private":true,"version":"2.0.0",
+  "scripts":{
+    "setup":"node scripts/restore-backend.mjs && npm install --prefix backend && npm install --prefix frontend && node scripts/download-textures.mjs",
+    "backend:restore":"node scripts/restore-backend.mjs",
+    "assets:upgrade":"node scripts/download-textures.mjs",
+    "dev:frontend":"npm run dev --prefix frontend",
+    "dev:backend":"npm run dev --prefix backend",
+    "build":"npm run build --prefix frontend",
+    "check:backend":"node scripts/verify-backend.mjs"
+  }
+}
