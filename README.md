@@ -14,6 +14,7 @@
 > **Documentation scope:** This README describes the implementation on the `main` branch as of **29 October 2026**. It distinguishes implemented behavior from visual metaphors, estimates, and future work.
 
 **Repository:** https://github.com/Vraj-Ramavat/WAD_Codex  
+**Live website:** [https://codegalaxy-nova.vercel.app/](https://codegalaxy-nova.vercel.app/)  
 **Original project/reference:** https://github.com/Vraj-Ramavat/WAD_review  
 **App directory:** [`CodeGalaxy-NOVA/`](CodeGalaxy-NOVA/)  
 **Local frontend:** http://localhost:3000  
