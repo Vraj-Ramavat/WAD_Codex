@@ -49,7 +49,7 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-// API Routes
+// API Routes — Vercel preserves the original /api/* request paths.
 app.use('/api/auth', authRoutes);
 app.use('/api/repos', reposRoutes);
 
@@ -64,8 +64,13 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
   res.status(500).json({ error: err.message || 'Internal Server Error' });
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 CodeGalaxy Backend Server listening on http://localhost:${PORT}`);
-  console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
-});
+// Vercel's Express runtime consumes the exported app directly.
+export default app;
+
+// Preserve the existing Node.js/tsx local development server.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 CodeGalaxy Backend Server listening on http://localhost:${PORT}`);
+    console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+  });
+}
